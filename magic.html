@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="สิ่งเล็ก ๆ ที่ซ่อนอยู่ในแสงไฟ" />
+  <title>สิ่งที่อยากบอกเธอ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="page-shell">
+    <nav class="topbar" aria-label="เมนูหลัก">
+      <a class="brand" href="index.html" aria-label="กลับหน้าแรก"><span class="brand-mark">♡</span>  note</a>
+      <!-- <button class="share-button" id="shareButton" type="button"><span aria-hidden="true">↗</span> ส่งลิงก์นี้</button> -->
+    </nav>
+    <section class="sticker-section" id="scene">
+      <div class="section-label"></div>
+      <div class="sticker-card" id="stickerCard">
+        <div class="heart-burst" id="heartBurst" aria-hidden="true"></div>
+        <div class="sticker-art" aria-hidden="true">
+          <div class="sticker-sparkles">✦　·　✧</div>
+          <div class="sticker-face">૮ ˶ᵔ ᵕ ᵔ˶ ა</div>
+          <div class="sticker-heart">♡</div>
+          <div class="sticker-shadow"></div>
+        </div>
+        <div class="question-content">
+          <p class="eyebrow"><span></span> a tiny confession</p>
+          <h2>เราชอบโน๊ตมากที่สุดเลย<br /><em>เรายังอยากอยู่ตรงนี้ จะรอวันที่โน้ตให้โอกาสเราได้ดูแลโน้ตนะ</em></h2>
+          <p class="question-text">ตอบตามหัวใจได้เลยนะ<br />แต่เรามีอะไรน่ารัก ๆ อยากให้ดูด้วย ♡</p>
+          <div class="answer-area" id="answerArea">
+            <button class="answer-button answer-yes" id="yesButton" type="button">ตกลง <span>♡</span></button>
+            <button class="answer-button answer-no" id="noButton" type="button">ไม่</button>
+          </div>
+          <p class="runaway-note" id="runawayNote" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="flower-result" id="flowerResult" aria-live="polite" hidden>
+        <div class="flower-sticker" aria-hidden="true">🌷</div>
+        <div><strong> ดอกไม้นี้เราให้</strong><span>คิดถึงนะ ♡</span></div>
+      </div>
+    </section>
+    <footer><a class="back-link" href="index.html">← กลับไปอ่านข้อความแรก</a><span>02 / 02</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status">คัดลอกลิงก์แล้ว ส่งให้เธอได้เลย ♡</div>
+  <div class="letter-modal" id="letterModal" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+    <div class="letter-backdrop" data-letter-close></div>
+    <article class="letter-paper">
+      <button class="letter-close" id="letterClose" type="button" aria-label="ปิดจดหมาย">×</button>
+      <div class="letter-topline"><span>little note no.</span><span>♡</span></div>
+      <p class="letter-kicker">a letter for you</p>
+      <h2 id="letterTitle">แค่เห็นเธอยิ้ม</h2>
+      <div class="letter-rule"></div>
+      <p class="letter-body" id="letterBody">วันธรรมดาของเราก็เหมือนมีแสงแดดเพิ่มขึ้นมาอีกนิด</p>
+      <p class="letter-sender" id="letterSender">จากคนที่แอบมองเธออยู่เสมอ</p>
+      <div class="letter-seal">♡</div>
+    </article>
+  </div>
+  <script src="share.js"></script>
+  <script>
+    const answerArea = document.querySelector('#answerArea');
+    const noButton = document.querySelector('#noButton');
+    const yesButton = document.querySelector('#yesButton');
+    const flowerResult = document.querySelector('#flowerResult');
+    const stickerCard = document.querySelector('#stickerCard');
+    const heartBurst = document.querySelector('#heartBurst');
+    const runawayNote = document.querySelector('#runawayNote');
+    const messages = [
+      'แง... ลองกดปุ่มอื่นดูไหม',
+      'จับไม่ทันหรอกนะ ♡',
+      'คิดถึงอยู่เรารู้นะ',
+      'ปุ่มนี้กดไม่ได้นะ เราเขิน',
+      'อย่าเพิ่งกดไม่สิ ขอร้องน้า',
+      'หัวใจบอกให้กดตกลงนะ ♥',
+      'ใกล้แค่นี้เอง แต่จับไม่ได้หรอก',
+      'ลองใหม่อีกที... ',
+      'เรารอคำตอบที่น่ารักกว่านี้อยู่นะ',
+      'ไม่เอาคำว่าไม่ได้ไหม ♡',
+    ];
+    let escapeCount = 0;
+
+    noButton.addEventListener('click', moveNoButton);
+    noButton.addEventListener('pointerenter', moveNoButton);
+    yesButton.addEventListener('click', () => {
+      stickerCard.classList.add('is-heart-mode');
+      stickerCard.querySelector('.sticker-face').textContent = '♥';
+      stickerCard.querySelector('.sticker-heart').textContent = '♥';
+      stickerCard.querySelector('.question-content h2').innerHTML = 'ชอบที่สุดเลย ♡';
+      stickerCard.querySelector('.question-text').innerHTML = 'เราให้ใจไปแล้วนะ<br />เอ็นดูนิดนึงได้มั้ย ♡';
+      flowerResult.hidden = false;
+      flowerResult.classList.add('is-visible');
+      yesButton.textContent = 'ตกลงแล้วน้า ♡';
+      yesButton.disabled = true;
+      noButton.hidden = true;
+      runawayNote.textContent = '';
+      createHeartBurst();
+    });
+
+    function createHeartBurst() {
+      heartBurst.replaceChildren();
+      for (let index = 0; index < 22; index += 1) {
+        const heart = document.createElement('span');
+        heart.textContent = index % 3 === 0 ? '♥' : '♡';
+        heart.style.setProperty('--x', `${Math.random() * 100}%`);
+        heart.style.setProperty('--drift', `${(Math.random() - 0.5) * 180}px`);
+        heart.style.setProperty('--delay', `${Math.random() * 0.8}s`);
+        heart.style.setProperty('--size', `${16 + Math.random() * 25}px`);
+        heartBurst.appendChild(heart);
+      }
+    }
+
+    function moveNoButton() {
+      escapeCount += 1;
+      const area = answerArea.getBoundingClientRect();
+      const button = noButton.getBoundingClientRect();
+      const maxX = Math.max(0, area.width - button.width);
+      const maxY = Math.max(0, area.height - button.height);
+      noButton.style.left = `${Math.random() * maxX}px`;
+      noButton.style.top = `${Math.random() * maxY}px`;
+      runawayNote.textContent = messages[(escapeCount - 1) % messages.length];
+    }
+  </script>
+</body>
+</html>
